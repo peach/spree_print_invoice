@@ -2,6 +2,7 @@
 
 bill_address = @order.bill_address
 ship_address = @order.ship_address
+shipping_method = (@shipment || @order.shipments.first).try(:shipping_method)
 anonymous = @order.email =~ /@example.net$/
 
 
@@ -21,7 +22,7 @@ end
 
 data = [
   [Spree.t(:billing_address), Spree.t(:shipping_address)], 
-  [address_info(bill_address), address_info(ship_address) + "\n\nvia #{@order.shipments.first.shipping_method.name}"]
+  [address_info(bill_address), address_info(ship_address) + (shipping_method.present? ? "\n\nvia #{shipping_method.name}" : '')]
 ]
 
 move_down 75
