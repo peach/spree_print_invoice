@@ -33,16 +33,21 @@ else
   font @font_face,  :size => 9
   text "#{Spree.t(:order_number, :number => @order.number)}", :align => :right
 
-  if @shipment.present?
-    move_down 2
-    font @font_face, :size => 9
-    text "#{Spree.t(:shipment)} #{@shipment.number}", :align => :right
-  end
-
   move_down 2
   font @font_face, :size => 9
   text "#{I18n.l Date.today}", :align => :right
 
+  require 'barby'
+  require 'barby/barcode/code_39'
+  require 'barby/outputter/prawn_outputter'
+
+  if @shipment.present?
+    move_down 2
+    font @font_face, :size => 9
+    text "#{Spree.t(:shipment)} #{@shipment.number}", align: :right
+    barcode = Barby::Code39.new @shipment.number
+    barcode.annotate_pdf(self, x: 358, y: 600)
+  end
 end
 
 
