@@ -25,7 +25,17 @@ data = [
   [address_info(bill_address), address_info(ship_address) + (shipping_method.present? ? "\n\nvia #{shipping_method.name}" : '')]
 ]
 
-move_down 75
+if @order.user.present?
+  move_down 60
+  font @font_face, :size => 9, :style => :bold
+  text "Client: #{@order.user.name}", :align => :left
+  move_down 5
+else
+  move_down 75
+end
+
+font @font_face, :size => 9
+
 table(data, :width => 540) do
   row(0).font_style = :bold
 
