@@ -3,29 +3,29 @@ data = []
 bold_rows = []
 
 if @hide_prices
-  @column_widths = { 0 => 100, 1 => 165, 2 => 75, 3 => 75 }
-  @align = { 0 => :left, 1 => :left, 2 => :right, 3 => :right }
+  @column_widths = { 0 => 100, 1 => 125, 2 => 75, 3 => 50, 4 => 145 }
+  @align = { 0 => :left, 1 => :left, 2 => :right, 3 => :right , 4 => :center}
   if @order.shipments.count > 1
     bold_rows << data.size
     data << ["Included in this shipment", nil, nil, nil]
   end
   bold_rows << data.size
-  data << [Spree.t(:sku), Spree.t(:item_description), "Size and Color", Spree.t(:qty)]
+  data << [Spree.t(:sku), 'Item', "Size and Color", 'Quantity', 'Return Code (Please circle code) See back for explanation' ]
 else
   @column_widths = { 0 => 75, 1 => 205, 2 => 75, 3 => 50, 4 => 75, 5 => 60 }
   @align = { 0 => :left, 1 => :left, 2 => :left, 3 => :right, 4 => :right, 5 => :right}
   bold_rows << data.size
-  data << [Spree.t(:sku), Spree.t(:item_description), "Size and Color", Spree.t(:price), Spree.t(:qty), Spree.t(:total)]
+  data << [Spree.t(:sku), 'Item', "Size and Color", Spree.t(:price), 'Quantity', Spree.t(:total)]
 end
 
 @shipment.manifest.each do |m|
   next if @hide_prices and m.line_item.tbd?
-  row = [m.variant.product.sku, "#{m.variant.product.name} - #{m.variant.options_text} "]
+  row = [m.variant.sku, m.variant.product.name]
   row << m.variant.options_text
   row << m.line_item.single_display_amount.to_s unless @hide_prices
   row << m.quantity
-  row << Spree::Money.new(m.line_item.price*m.quantity, { currency: m.line_item.currency }).to_s unless @hide_prices
-      
+  row << Spree::Money.new(m.line_item.price * m.quantity, { currency: m.line_item.currency }).to_s unless @hide_prices
+  row << 'A   B   C   D   E   F   G   H   I'    
   data << row
 end
 
@@ -37,11 +37,11 @@ if @hide_prices and @order.shipments.count > 1
   @order.shipments.each do |shipment|
     if (shipment.number != @shipment.number)
       shipment.manifest.each do |m|
-        row = [m.variant.product.sku, "#{m.variant.product.name} - #{m.variant.options_text} "]
+        row = [m.variant.sku, m.variant.product.name]
         row << m.variant.options_text
         row << m.line_item.single_display_amount.to_s unless @hide_prices
         row << m.quantity
-        row << Spree::Money.new(m.line_item.price*m.quantity, { currency: m.line_item.currency }).to_s unless @hide_prices
+        row << Spree::Money.new(m.line_item.price * m.quantity, { currency: m.line_item.currency }).to_s unless @hide_prices
         data << row
       end
     end

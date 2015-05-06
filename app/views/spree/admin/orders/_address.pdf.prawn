@@ -27,8 +27,8 @@ data = [
 
 if @order.user.present?
   move_down 60
-  font @font_face, :size => 9, :style => :bold
-  text "Client: #{@order.user.name}", :align => :left
+  font @font_face, :size => 11, :style => :bold
+  text "Packing Slip for #{@order.user.name}", :align => :left
   move_down 5
 else
   move_down 75
@@ -36,7 +36,7 @@ end
 
 font @font_face, :size => 9
 
-table(data, :width => 540) do
+table(data, :width => 495) do
   row(0).font_style = :bold
 
   # Billing address header
