@@ -7,7 +7,7 @@ if @hide_prices
   @align = { 0 => :left, 1 => :left, 2 => :right, 3 => :right , 4 => :center}
   if @order.shipments.count > 1
     bold_rows << data.size
-    data << ["Included in this shipment", nil, nil, nil]
+    data << ["Included in this shipment", nil, nil, nil, nil]
   end
   bold_rows << data.size
   data << [Spree.t(:sku), 'Item', "Size and Color", 'Quantity', "Return Code \n (Please circle code) \n See back for explanation" ]
@@ -33,7 +33,7 @@ extra_row_count = 0
 
 if @hide_prices and @order.shipments.count > 1
   bold_rows << data.size
-  data << ["Other Items ordered (not included in this shipment)", nil, nil, nil]
+  data << ["Other Items ordered (not included in this shipment)", nil, nil, nil, nil]
   @order.shipments.each do |shipment|
     if (shipment.number != @shipment.number)
       shipment.manifest.each do |m|
@@ -42,6 +42,7 @@ if @hide_prices and @order.shipments.count > 1
         row << m.line_item.single_display_amount.to_s unless @hide_prices
         row << m.quantity
         row << Spree::Money.new(m.line_item.price * m.quantity, { currency: m.line_item.currency }).to_s unless @hide_prices
+        row << 'A   B   C   D   E   F   G   H   I'
         data << row
       end
     end
