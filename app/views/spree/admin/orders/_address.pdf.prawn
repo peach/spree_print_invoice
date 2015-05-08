@@ -36,7 +36,7 @@ end
 
 font @font_face, :size => 9
 
-table(data, :width => 495) do
+table(data, :width => 475) do
   row(0).font_style = :bold
 
   # Billing address header

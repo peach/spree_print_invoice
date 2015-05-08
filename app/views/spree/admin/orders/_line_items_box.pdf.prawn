@@ -3,14 +3,14 @@ data = []
 bold_rows = []
 
 if @hide_prices
-  @column_widths = { 0 => 100, 1 => 125, 2 => 75, 3 => 50, 4 => 145 }
+  @column_widths = { 0 => 100, 1 => 125, 2 => 75, 3 => 50, 4 => 125 }
   @align = { 0 => :left, 1 => :left, 2 => :right, 3 => :right , 4 => :center}
   if @order.shipments.count > 1
     bold_rows << data.size
     data << ["Included in this shipment", nil, nil, nil]
   end
   bold_rows << data.size
-  data << [Spree.t(:sku), 'Item', "Size and Color", 'Quantity', 'Return Code (Please circle code) See back for explanation' ]
+  data << [Spree.t(:sku), 'Item', "Size and Color", 'Quantity', "Return Code \n (Please circle code) \n See back for explanation" ]
 else
   @column_widths = { 0 => 75, 1 => 205, 2 => 75, 3 => 50, 4 => 75, 5 => 60 }
   @align = { 0 => :left, 1 => :left, 2 => :left, 3 => :right, 4 => :right, 5 => :right}
