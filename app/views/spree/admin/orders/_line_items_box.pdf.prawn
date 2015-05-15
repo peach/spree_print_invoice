@@ -3,7 +3,7 @@ data = []
 bold_rows = []
 
 if @hide_prices
-  @column_widths = { 0 => 100, 1 => 125, 2 => 75, 3 => 50, 4 => 125 }
+  @column_widths = { 0 => 100, 1 => 190, 2 => 75, 3 => 50, 4 => 125 }
   @align = { 0 => :left, 1 => :left, 2 => :right, 3 => :right , 4 => :center}
   if @order.shipments.count > 1
     bold_rows << data.size
@@ -71,7 +71,7 @@ unless @hide_prices
 end
 
 
-move_down(250)
+move_down(260)
 table(data, :width => @column_widths.values.compact.sum, :column_widths => @column_widths) do
   cells.border_width = 0.5
 
