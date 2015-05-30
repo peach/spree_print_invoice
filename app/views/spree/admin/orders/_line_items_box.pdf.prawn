@@ -1,75 +1,46 @@
 data = []
-
 bold_rows = []
 
-if @hide_prices
-  @column_widths = { 0 => 100, 1 => 190, 2 => 75, 3 => 50, 4 => 125 }
-  @align = { 0 => :left, 1 => :left, 2 => :right, 3 => :right , 4 => :center}
-  if @order.shipments.count > 1
-    bold_rows << data.size
-    data << ["Included in this shipment", nil, nil, nil, nil]
-  end
+@column_widths = { 0 => 100, 1 => 190, 2 => 75, 3 => 50, 4 => 125 }
+@align = { 0 => :left, 1 => :left, 2 => :right, 3 => :right , 4 => :center}
+if @order.shipments.count > 1
   bold_rows << data.size
-  data << [Spree.t(:sku), 'Item', "Size and Color", 'Quantity', "Return Code \n (Please circle code) \n See back for explanation" ]
-else
-  @column_widths = { 0 => 75, 1 => 205, 2 => 75, 3 => 50, 4 => 75, 5 => 60 }
-  @align = { 0 => :left, 1 => :left, 2 => :left, 3 => :right, 4 => :right, 5 => :right}
-  bold_rows << data.size
-  data << [Spree.t(:sku), 'Item', "Size and Color", Spree.t(:price), 'Quantity', Spree.t(:total)]
 end
+bold_rows << data.size
 
-@shipment.manifest.each do |m|
-  next if @hide_prices and m.line_item.tbd?
-  row = [m.variant.sku, m.variant.product.name]
-  row << m.variant.options_text
-  row << m.line_item.single_display_amount.to_s unless @hide_prices
-  row << m.quantity
-  row << Spree::Money.new(m.line_item.price * m.quantity, { currency: m.line_item.currency }).to_s unless @hide_prices
-  row << 'A   B   C   D   E   F   G   H   I'    
-  data << row
-end
+rows_visit = 0
 
-extra_row_count = 0  
+line_items = @order.shipments.map {|ship| ship.manifest }.flatten
+li_in_this_ship =  @shipment.manifest.select { |m| !m.line_item.tbd? }
+li_others =  line_items - li_in_this_ship
 
-if @hide_prices and @order.shipments.count > 1
-  bold_rows << data.size
-  data << ["Other Items ordered (not included in this shipment)", nil, nil, nil, nil]
-  @order.shipments.each do |shipment|
-    if (shipment.number != @shipment.number)
-      shipment.manifest.each do |m|
-        row = [m.variant.sku, m.variant.product.name]
-        row << m.variant.options_text
-        row << m.line_item.single_display_amount.to_s unless @hide_prices
-        row << m.quantity
-        row << Spree::Money.new(m.line_item.price * m.quantity, { currency: m.line_item.currency }).to_s unless @hide_prices
-        row << 'A   B   C   D   E   F   G   H   I'
-        data << row
-      end
+order_line_items = li_in_this_ship + li_others
+
+data << [Spree.t(:sku), 'Item', "Size and Color", 'Quantity', "Return Code \n (Please circle code) \n See back for explanation" ]  
+data << ["Included in this shipment", nil, nil, nil, nil]
+
+header_others = false
+
+i = 0 
+while i < line_items.size
+  move_down(100) unless i == 0
+  for index in (i...line_items.size)
+    if i >= li_in_this_ship.size && !header_others
+      data << ["Other Items ordered (not included in this shipment)", nil, nil, nil, nil]
+      header_others = true
     end
-
-  end  
-end
-
-unless @hide_prices
-  data << [""] * 5
-
-  extra_row_count += 1
-  data << [nil, nil, nil, nil,Spree.t(:subtotal), @shipment.display_item_cost.to_s ] 
-  
-  @shipment.adjustments_by_promotion_display.each do |promo, total_adj|
-    extra_row_count += 1  
-    data << [nil, nil, nil, nil, "Promotion #{promo.name}", total_adj.to_s ]
+    m = order_line_items[index]
+    row = [m.variant.sku, m.variant.product.name]
+    row << m.variant.options_text
+    row << m.line_item.single_display_amount.to_s unless @hide_prices
+    row << m.quantity
+    row << 'A   B   C   D   E   F   G   H   I'
+    break if (i = index + 1) && i % 10 == 0
+    data << row
   end
-  
-  if rate = @shipment.selected_shipping_rate
-    extra_row_count += 1
-    data << [nil, nil, nil, nil, rate.name, @shipment.display_cost.to_s ]
-  end  
-
-  data << [nil, nil, nil, nil, Spree.t(:total), @shipment.display_final_price_with_items.to_s ]
-
 end
 
+extra_row_count = 0
 
 move_down(260)
 table(data, :width => @column_widths.values.compact.sum, :column_widths => @column_widths) do
