@@ -1,6 +1,6 @@
 require 'prawn/layout'
 
-
+bounding_box([0, 720], width: 540, height: 650) do
 
 @font_face = Spree::PrintInvoice::Config[:print_invoice_font_face]
 
@@ -56,7 +56,7 @@ else
     end
 
     barcode = Barby::Code39.new @shipment.number
-    barcode.annotate_pdf(self, x: 358, y: 577)
+    barcode.annotate_pdf(self, x: 358, y: 507)
   end
 end
 
@@ -66,6 +66,8 @@ render :partial => "address"
 move_down 10
 
 render :partial => "line_items_box"
+
+end
 
 move_down 8
 
