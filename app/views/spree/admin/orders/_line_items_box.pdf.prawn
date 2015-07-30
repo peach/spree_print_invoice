@@ -32,11 +32,17 @@ end
 extra_row_count = 0  
 
 if @hide_prices and @order.shipments.count > 1
-  bold_rows << data.size
-  data << ["Other Items ordered (not included in this shipment)", nil, nil, nil, nil]
+  need_title = true
   @order.shipments.each do |shipment|
     if (shipment.number != @shipment.number)
       shipment.manifest.each do |m|
+        next if m.line_item.sample_bra? && !shipment.shipped?
+        next if m.line_item.subscription?
+        if need_title
+          need_title = false
+          bold_rows << data.size
+          data << ["Other Items ordered (not included in this shipment)", nil, nil, nil, nil]
+        end
         row = [m.variant.sku, m.variant.product.name]
         row << m.variant.options_text
         row << m.line_item.single_display_amount.to_s unless @hide_prices
