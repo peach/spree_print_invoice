@@ -19,10 +19,24 @@ def address_info(address)
   info.strip
 end
 
-
+header_row = []
+address_row = []
+if bill_address.present?
+   header_row.push(Spree.t(:billing_address))
+   address_row.push(address_info(bill_address))
+end
+if ship_address.present?
+  header_row.push(Spree.t(:shipping_address))
+  address_row.push(address_info(ship_address) + (shipping_method.present? ? "\n\nvia #{shipping_method.name}" : ''))
+end
+if header_row.present? && header_row.size < 2
+  # add an empty address table column for the missing address
+  header_row.push('')
+  address_row.push('')
+end
 data = [
-  [Spree.t(:billing_address), Spree.t(:shipping_address)], 
-  [address_info(bill_address), address_info(ship_address) + (shipping_method.present? ? "\n\nvia #{shipping_method.name}" : '')]
+  header_row,
+  address_row
 ]
 
 if @order.user.present?
@@ -36,7 +50,8 @@ end
 
 font @font_face, :size => 9
 
-table(data, :width => 540) do
+if header_row.present?
+ table(data, :width => 540) do
   row(0).font_style = :bold
 
   # Billing address header
@@ -54,5 +69,5 @@ table(data, :width => 540) do
   # Ship address information
   row(1).column(1).borders = [:top, :right, :bottom, :left]
   row(1).column(1).border_widths = [0.5, 0.5, 0.5, 0]
-
+ end
 end
