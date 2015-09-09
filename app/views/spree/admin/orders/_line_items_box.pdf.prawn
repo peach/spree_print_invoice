@@ -18,6 +18,14 @@ else
   data << [Spree.t(:sku), 'Item', "Size and Color", Spree.t(:price), 'Quantity', Spree.t(:total)]
 end
 
+if @order.related_with_subscription?
+  if @hide_prices
+    data << ['CARD-01','Auto-replenishment info card','', 1,'']
+  else
+    data << ['CARD-01','Auto-replenishment info card','','', 1,'', '']
+  end
+end
+
 @shipment.manifest.each do |m|
   next if @hide_prices and m.line_item.tbd?
   row = [m.variant.sku, m.variant.product.name]
