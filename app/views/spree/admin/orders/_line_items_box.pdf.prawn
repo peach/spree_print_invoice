@@ -18,7 +18,7 @@ else
   data << [Spree.t(:sku), 'Item', "Size and Color", Spree.t(:price), 'Quantity', Spree.t(:total)]
 end
 
-if @order.related_with_subscription?
+if @shipment.add_subscription_card?
   if @hide_prices
     data << ['CARD-01','Auto-replenishment info card','', 1,'']
   else
