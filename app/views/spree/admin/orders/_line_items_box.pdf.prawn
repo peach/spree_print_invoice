@@ -100,7 +100,15 @@ table(data, :width => @column_widths.values.compact.sum, :column_widths => @colu
   row(0).columns(0..last_column).border_widths = [0.5, 0, 0.5, 0.5]
 
   row(0).column(last_column).border_widths = [0.5, 0.5, 0.5, 0.5]
-
+  
+  values = cells.columns(3..4).rows(1..-1)
+  higth_sales = values.filter do |cell|
+    puts cell.content.to_i
+    cell.content.to_i > 1
+  end
+  
+  higth_sales.text_color = "F48577"
+  
   if extra_row_count > 0
     
     extra_rows = row((-2-extra_row_count)..-2)
