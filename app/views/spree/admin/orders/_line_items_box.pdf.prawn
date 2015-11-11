@@ -16,19 +16,14 @@ if @hide_prices
   end
   style_row(row_styles, data.size, font_style: :bold)
   data << [Spree.t(:sku), 'Item', "Size and Color", 'Quantity', "Return Code \n (Please circle code) \n See back for explanation" ]
+  @shipment.cards_for_packing_slip.each do |card|
+    data << [card.sku, card.name, card.options_text, card.quantity, card.return_code]
+  end
 else
   @column_widths = { 0 => 75, 1 => 205, 2 => 75, 3 => 50, 4 => 75, 5 => 60 }
   @align = { 0 => :left, 1 => :left, 2 => :left, 3 => :right, 4 => :right, 5 => :right}
   style_row(row_styles, data.size, font_style: :bold)
   data << [Spree.t(:sku), 'Item', "Size and Color", Spree.t(:price), 'Quantity', Spree.t(:total)]
-end
-
-if @shipment.add_subscription_card?
-  if @hide_prices
-    data << ['CARD-01','Auto-replenishment info card','', 1,'']
-  else
-    data << ['CARD-01','Auto-replenishment info card','','', 1,'', '']
-  end
 end
 
 @shipment.manifest.each do |m|
