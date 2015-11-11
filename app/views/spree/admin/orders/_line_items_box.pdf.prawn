@@ -39,7 +39,7 @@ end
   row << m.quantity
   row << Spree::Money.new(m.line_item.price * m.quantity, { currency: m.line_item.currency }).to_s unless @hide_prices
   row << 'A   B   C   D   E   F   G   H   I'
-  style_row(row_styles, data.size, text_color: "F48577") if m.quantity > 1
+  style_row(row_styles, data.size, text_color: "e73a22") if m.quantity > 1
   data << row
 end
 
