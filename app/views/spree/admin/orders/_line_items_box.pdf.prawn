@@ -1,20 +1,25 @@
 data = []
 
-bold_rows = []
+row_styles = {}
+
+def style_row(styles, row_num, opts={})
+  styles[row_num] ||= {}
+  styles[row_num].merge!(opts)
+end
 
 if @hide_prices
   @column_widths = { 0 => 100, 1 => 190, 2 => 75, 3 => 50, 4 => 125 }
   @align = { 0 => :left, 1 => :left, 2 => :right, 3 => :right , 4 => :center}
   if @order.shipments.count > 1
-    bold_rows << data.size
+    style_row(row_styles, data.size, font_style: :bold)
     data << ["Included in this shipment", nil, nil, nil, nil]
   end
-  bold_rows << data.size
+  style_row(row_styles, data.size, font_style: :bold)
   data << [Spree.t(:sku), 'Item', "Size and Color", 'Quantity', "Return Code \n (Please circle code) \n See back for explanation" ]
 else
   @column_widths = { 0 => 75, 1 => 205, 2 => 75, 3 => 50, 4 => 75, 5 => 60 }
   @align = { 0 => :left, 1 => :left, 2 => :left, 3 => :right, 4 => :right, 5 => :right}
-  bold_rows << data.size
+  style_row(row_styles, data.size, font_style: :bold)
   data << [Spree.t(:sku), 'Item', "Size and Color", Spree.t(:price), 'Quantity', Spree.t(:total)]
 end
 
@@ -33,7 +38,8 @@ end
   row << m.line_item.single_display_amount.to_s unless @hide_prices
   row << m.quantity
   row << Spree::Money.new(m.line_item.price * m.quantity, { currency: m.line_item.currency }).to_s unless @hide_prices
-  row << 'A   B   C   D   E   F   G   H   I'    
+  row << 'A   B   C   D   E   F   G   H   I'
+  style_row(row_styles, data.size, text_color: "F48577") if m.quantity > 1
   data << row
 end
 
@@ -48,7 +54,7 @@ if @hide_prices and @order.shipments.count > 1
         next if m.line_item.subscription?
         if need_title
           need_title = false
-          bold_rows << data.size
+          style_row(row_styles, data.size, font_style: :bold)
           data << ["Other Items ordered (not included in this shipment)", nil, nil, nil, nil]
         end
         row = [m.variant.sku, m.variant.product.name]
@@ -89,8 +95,9 @@ move_down(260)
 table(data, :width => @column_widths.values.compact.sum, :column_widths => @column_widths) do
   cells.border_width = 0.5
 
-  bold_rows.each do |row_num|
-    row(row_num).font_style = :bold
+  row_styles.each do |row_num, styles|
+    row(row_num).font_style = styles[:font_style] if styles[:font_style].present?
+    row(row_num).text_color = styles[:text_color] if styles[:text_color].present?
   end
 
   row(0).borders = [:bottom]
