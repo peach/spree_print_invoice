@@ -61,18 +61,18 @@ else
 end
 
 
-render :partial => "address"
+render :partial => "spree/orders/address"
 
 move_down 10
 
-render :partial => "line_items_box"
+render :partial => "spree/orders/line_items_box"
 
 end
 
 move_down 8
 
 # Footer
-render :partial => "footer"
+render :partial => "spree/orders/footer"
 
 bounding_box([0, 150], width: 540, height: 95) do
   @order.get_comments(type_notes).each do |order_comment|
