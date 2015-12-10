@@ -4,7 +4,7 @@ version = File.read(File.expand_path("../SPREE_VERSION", __FILE__)).strip
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_print_invoice'
-  s.version     = '2.0.1'
+  s.version     = '2.3.8'
   s.summary     = 'Print invoices from a spree order'
   s.homepage    = 'https://github.com/spree/spree_print_invoice'
 
@@ -14,6 +14,8 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.requirements << 'none'
   s.authors      = 'Spree Community'
+
+  s.add_dependency('barby', '~> 0.5.0')
 
   s.add_dependency('prawn', '1.0.0')
 
