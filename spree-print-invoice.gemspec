@@ -1,10 +1,9 @@
 # -*- encoding: utf-8 -*-
-version = File.read(File.expand_path("../SPREE_VERSION", __FILE__)).strip
 
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_print_invoice'
-  s.version     = '2.3.8'
+  s.version     = '1.1.0'
   s.summary     = 'Print invoices from a spree order'
   s.homepage    = 'https://github.com/spree/spree_print_invoice'
 
@@ -17,9 +16,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency('barby', '~> 0.5.0')
 
-  s.add_dependency('prawn', '1.0.0')
+  s.add_dependency('prawn', '2.0.2')
 
-  s.add_dependency 'spree_core', '~> 2.4.2.beta' #version
+  s.add_dependency "solidus", [">= 1.1.0.pre", "< 1.2.0"]
 
   s.add_development_dependency 'rspec-rails', '~> 2.14.0'
 end
