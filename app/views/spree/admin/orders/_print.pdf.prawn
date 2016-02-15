@@ -50,7 +50,7 @@ else
     font @font_face, :size => 9
     text "#{Spree.t(:shipment)}: #{@shipment.number}", align: :right
 
-    if @order.stylist.present?
+    if @order.stylist.present? && !@order.stylist.corporate?
       move_down 2
       text "Stylist: #{@order.stylist.name}", align: :right
     end
