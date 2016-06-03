@@ -22,3 +22,9 @@ text "If you wish to return one of your peach products, please refer to our retu
 move_down 4
 
 text("If you would like to exchange an item, please #{@order.has_personal_stylist? ? "connect with your personal stylist, <b>#{@order.stylist.name}</b> at <b>#{@order.stylist.email}</b>" : "email us at <b>returns@peach.company</b>"}", style: :italic, inline_format: true )
+
+number_pages "<page> in a total of <total>", 
+                                       {:start_count_at => 0,
+                                        :at => [bounds.right - 100, 0],
+                                        :align => :right,
+                                        :size => 12}
