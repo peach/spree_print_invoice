@@ -76,7 +76,7 @@ render :partial => "footer"
 
 move_down 665
 
-text "If you wish to return one of your peach products, please refer to our return policy on the back of this slip first to determine if your product is eligible for a return. If it is, please pop it back into the box it was sent in and use the pre-paid return label found in your box. Once we receive and process the return, we will refund you accordingly. Please allow two weeks for return processing.", :style => :italic 
+text "If you wish to return one of your peach products, visit www.discoverpeach.com and sign in to your account to view your Order History. Select the order you'd like to return and follow the instructions to receive your pre-paid UPS shipping label#{(ENV['RETURN_LABEL_INCLUDED'] || false).to_bool ? ", or use the included return label" : nil}. Pop the items you're returning into their original box with the packing slip and drop them off at the nearest UPS Drop Box. Once we receive and process the return, we will refund you accordingly. Please allow two weeks for return processing.", :style => :italic 
 
 move_down 4
 

@@ -8,16 +8,16 @@ def style_row(styles, row_num, opts={})
 end
 
 if @hide_prices
-  @column_widths = { 0 => 100, 1 => 190, 2 => 75, 3 => 50, 4 => 125 }
-  @align = { 0 => :left, 1 => :left, 2 => :right, 3 => :right , 4 => :center}
+  @column_widths = { 0 => 100, 1 => 240, 2 => 125, 3 => 75 }
+  @align = { 0 => :left, 1 => :left, 2 => :right, 3 => :right }
   if @order.shipments.count > 1
     style_row(row_styles, data.size, font_style: :bold)
-    data << ["Included in this shipment", nil, nil, nil, nil]
+    data << ["Included in this shipment", nil, nil, nil]
   end
   style_row(row_styles, data.size, font_style: :bold)
-  data << [Spree.t(:sku), 'Item', "Size and Color", 'Quantity', "Return Code \n (Please circle code) \n See back for explanation" ]
+  data << [Spree.t(:sku), 'Item', "Size and Color", 'Quantity' ]
   @shipment.cards_for_packing_slip.each do |card|
-    data << [card.sku, card.name, card.options_text, card.quantity, card.return_code]
+    data << [card.sku, card.name, card.options_text, card.quantity]
   end
 else
   @column_widths = { 0 => 75, 1 => 205, 2 => 75, 3 => 50, 4 => 75, 5 => 60 }
@@ -33,7 +33,6 @@ end
   row << m.line_item.single_display_amount.to_s unless @hide_prices
   row << m.quantity
   row << Spree::Money.new(m.line_item.price * m.quantity, { currency: m.line_item.currency }).to_s unless @hide_prices
-  row << 'A   B   C   D   E   F   G   H   I'
   style_row(row_styles, data.size, text_color: "e73a22") if m.quantity > 1
   data << row
 end
@@ -50,14 +49,13 @@ if @hide_prices and @order.shipments.count > 1
         if need_title
           need_title = false
           style_row(row_styles, data.size, font_style: :bold)
-          data << ["Other Items ordered (not included in this shipment)", nil, nil, nil, nil]
+          data << ["Other Items ordered (not included in this shipment)", nil, nil, nil]
         end
         row = [m.variant.sku, m.variant.product.name]
         row << m.variant.options_text
         row << m.line_item.single_display_amount.to_s unless @hide_prices
         row << m.quantity
         row << Spree::Money.new(m.line_item.price * m.quantity, { currency: m.line_item.currency }).to_s unless @hide_prices
-        row << 'A   B   C   D   E   F   G   H   I'
         data << row
       end
     end
