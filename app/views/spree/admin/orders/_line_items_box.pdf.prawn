@@ -8,7 +8,7 @@ def style_row(styles, row_num, opts={})
 end
 
 if @hide_prices
-  @column_widths = { 0 => 100, 1 => 240, 2 => 125, 3 => 75 }
+  @column_widths = { 0 => 100, 1 => 230, 2 => 150, 3 => 60 }
   @align = { 0 => :left, 1 => :left, 2 => :right, 3 => :right }
   if @order.shipments.count > 1
     style_row(row_styles, data.size, font_style: :bold)
@@ -20,7 +20,7 @@ if @hide_prices
     data << [card.sku, card.name, card.options_text, card.quantity]
   end
 else
-  @column_widths = { 0 => 75, 1 => 205, 2 => 75, 3 => 50, 4 => 75, 5 => 60 }
+  @column_widths = { 0 => 75, 1 => 180, 2 => 125, 3 => 50, 4 => 50, 5 => 60 }
   @align = { 0 => :left, 1 => :left, 2 => :left, 3 => :right, 4 => :right, 5 => :right}
   style_row(row_styles, data.size, font_style: :bold)
   data << [Spree.t(:sku), 'Item', "Size and Color", Spree.t(:price), 'Quantity', Spree.t(:total)]
@@ -85,7 +85,7 @@ end
 
 
 move_down(260)
-table(data, :width => @column_widths.values.compact.sum, :column_widths => @column_widths) do
+table(data, :width => @column_widths.values.compact.sum, :column_widths => @column_widths, :cell_style => {:padding => [8, 5, 8, 5]}) do
   cells.border_width = 0.5
 
   row_styles.each do |row_num, styles|
