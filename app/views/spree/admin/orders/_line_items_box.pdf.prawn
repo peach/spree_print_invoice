@@ -84,7 +84,7 @@ unless @hide_prices
 end
 
 
-move_down(260)
+move_down 120
 table(data, :width => @column_widths.values.compact.sum, :column_widths => @column_widths, :cell_style => {:padding => [8, 5, 8, 5]}) do
   cells.border_width = 0.5
 

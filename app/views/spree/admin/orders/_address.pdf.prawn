@@ -39,15 +39,6 @@ data = [
   address_row
 ]
 
-if @order.user.present?
-  move_down 60
-  font @font_face, :size => 11, :style => :bold
-  text "Packing Slip for #{@order.user.name}", :align => :left
-  move_down 5
-else
-  move_down 75
-end
-
 font @font_face, :size => 9
 
 if header_row.present?
