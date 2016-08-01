@@ -1,5 +1,7 @@
-# data = [
-#   [Spree.t(:footer_left), Spree.t(:footer_left2), Spree.t(:footer_right), Spree.t(:footer_right2)]
-# ]
-
-# table(data)
+number_pages "Page <page> of <total>",
+             {
+               :start_count_at => 0,
+               :at => [bounds.right - 100, 0],
+               :align => :right,
+               :size => 12
+             }
