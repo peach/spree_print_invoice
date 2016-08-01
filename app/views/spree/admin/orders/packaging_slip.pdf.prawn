@@ -2,3 +2,4 @@
 @hide_prices = true
 
 render :partial => "print"
+

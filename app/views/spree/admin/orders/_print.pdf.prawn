@@ -1,72 +1,13 @@
 require 'prawn/layout'
+require 'barby'
+require 'barby/barcode/code_39'
+require 'barby/outputter/prawn_outputter'
 
-bounding_box([0, 720], width: 540, height: 650) do
+render partial: 'repeat'
 
-@font_face = Spree::PrintInvoice::Config[:print_invoice_font_face]
-
-font @font_face
-
-# im = Rails.application.assets.find_asset(Spree::PrintInvoice::Config[:print_invoice_logo_path])
-# image im , :at => [0,720], :scale => logo_scale
-
-#fill_color "E99323"
-if @hide_prices
-  text Spree.t(:packaging_slip), :align => :right, :style => :bold, :size => 18
-else
-  text Spree.t(:customer_invoice), :align => :right, :style => :bold, :size => 18
-end
-fill_color "000000"
-
-move_down 2
-
-if Spree::PrintInvoice::Config.use_sequential_number? && @order.invoice_number.present? && !@hide_prices
-
-  font @font_face, :size => 9, :style => :bold
-  text "#{Spree.t(:invoice_number)} #{@order.invoice_number}", :align => :right
-
-  move_down 2
-  font @font_face, :size => 9
- # text "#{Spree.t(:invoice_date)} #{I18n.l @order.invoice_date}", :align => :right
-  text "#{Spree.t(:invoice_date)} #{I18n.l Date.today.strftime("%m/%d/%Y")}", :align => :right
-
-else
-
-  move_down 2
-  font @font_face, :size => 9, :style => :bold
-  text "#{Spree.t(:order_number, :number => @order.number)}", :align => :right
-
-  move_down 2
-  font @font_face, :size => 9
-  text "Placed: #{@order.completed_at.to_date}", :align => :right
-  move_down 2
-  text "Shipped: #{I18n.l Date.today}", :align => :right
-
-  require 'barby'
-  require 'barby/barcode/code_39'
-  require 'barby/outputter/prawn_outputter'
-
-  if @shipment.present?
-    move_down 2
-    font @font_face, :size => 9
-    text "#{Spree.t(:shipment)}: #{@shipment.number}", align: :right
-
-    if @order.stylist.present? && !@order.stylist.corporate?
-      move_down 2
-      text "Stylist: #{@order.stylist.name}", align: :right
-    end
-
-    barcode = Barby::Code39.new @shipment.number
-    barcode.annotate_pdf(self, x: 358, y: 507)
-  end
-end
-
-
-render :partial => "address"
-
-move_down 10
-
-render :partial => "line_items_box"
-
+bounding_box([0, 540], width: 540, height: 460) do
+  render :partial => "address"
+  render :partial => "line_items_box"
 end
 
 move_down 8
@@ -74,7 +15,7 @@ move_down 8
 # Footer
 render :partial => "footer"
 
-move_down 654
+move_down 650
 
 text "If you wish to return one of your peach products, visit www.discoverpeach.com and sign in to your account to view your Order History. Select the order you'd like to return and follow the instructions to receive your pre-paid UPS shipping label#{(ENV['RETURN_LABEL_INCLUDED'] || false).to_bool ? ", or use the included return label" : nil}. Pop the items you're returning into their original box with the packing slip and drop them off at the nearest UPS Drop Box. Once we receive and process the return, we will refund you accordingly. Please allow two weeks for return processing.", :style => :italic 
 
