@@ -2,7 +2,8 @@
 
 bill_address = @order.bill_address
 ship_address = @order.ship_address
-shipping_method = (@shipment || @order.shipments.first).try(:shipping_method)
+shipment = (@shipment || @order.shipments.first)
+shipping_method = shipment.try(:shipping_method)
 anonymous = @order.email =~ /@example.net$/
 
 
@@ -27,7 +28,22 @@ if bill_address.present?
 end
 if ship_address.present?
   header_row.push(Spree.t(:shipping_address))
-  address_row.push(address_info(ship_address) + (shipping_method.present? ? "\n\nvia #{shipping_method.name}" : ''))
+  via = ''
+  if shipping_method.present?
+    color_rgb = 
+      case shipment.shipping_speed.try(:color)
+      when 'green'
+        '#32CD32'
+      when 'amber'
+        '#FFEFD5'
+      when 'orange'
+        '#FF9900'
+      when 'red'
+        '#ff0000'  
+      end
+    via = "\n\n<color rgb='#{color_rgb}'>via #{shipping_method.name}</color>"
+  end
+  address_row.push(address_info(ship_address) + via)
 end
 if header_row.present? && header_row.size < 2
   # add an empty address table column for the missing address
@@ -42,7 +58,7 @@ data = [
 font @font_face, :size => 9
 
 if header_row.present?
- table(data, :width => 540) do
+ table(data, :width => 540,:cell_style => { :inline_format => true }) do
   row(0).font_style = :bold
 
   # Billing address header
