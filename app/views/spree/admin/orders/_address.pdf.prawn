@@ -2,8 +2,8 @@
 
 bill_address = @order.bill_address
 ship_address = (@shipment.address || @order.ship_address)
-shipment = (@shipment || @order.shipments.first)
-shipping_method = shipment.try(:shipping_method)
+shipping_method = (@shipment || @order.shipments.first).try(:shipping_method)
+shipping_speed = @shipment.try(:shipping_speed)
 anonymous = @order.email =~ /@example.net$/
 
 
@@ -30,8 +30,11 @@ if ship_address.present?
   header_row.push(Spree.t(:shipping_address))
   via = ''
   if shipping_method.present?
-    color_rgb = shipment.shipping_speed.try(:rgb)
-    via = "\n\n<color rgb='#{color_rgb}'>via #{shipping_method.name}</color>"
+    color_rgb = shipping_speed.try(:rgb)
+    via = "\n\n"
+    via += "<color rgb='#{color_rgb}'>" if color_rgb.present?
+    via += "via #{shipping_method.name}"
+    via += '</color>' if color_rgb.present?
   end
   address_row.push(address_info(ship_address) + via)
 end
