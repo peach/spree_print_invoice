@@ -30,11 +30,13 @@ if ship_address.present?
   header_row.push(Spree.t(:shipping_address))
   via = ''
   if shipping_method.present?
-    color_rgb = shipping_speed.try(:rgb)
-    via = "\n\n"
-    via += "<color rgb='#{color_rgb}'>" if color_rgb.present?
-    via += "via #{shipping_method.name}"
-    via += '</color>' if color_rgb.present?
+    via = "\n\nvia #{shipping_method.name}"
+    if shipping_speed.present?
+      color_rgb = shipping_speed.try(:rgb)
+      via += "<color rgb='#{color_rgb}'>" if color_rgb.present?
+      via += " #{shipping_speed.to_s.titleize}"
+      via += '</color>' if color_rgb.present?
+    end
   end
   address_row.push(address_info(ship_address) + via)
 end
