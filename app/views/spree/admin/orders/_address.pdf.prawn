@@ -1,7 +1,7 @@
 # Address Stuff
 
 bill_address = @order.bill_address
-ship_address = (@shipment.address || @order.ship_address)
+ship_address = @order.ship_address
 shipping_method = (@shipment || @order.shipments.first).try(:shipping_method)
 shipping_speed = @shipment.try(:shipping_speed)
 anonymous = @order.email =~ /@example.net$/
