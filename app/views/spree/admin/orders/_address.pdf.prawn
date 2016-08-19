@@ -39,7 +39,9 @@ if ship_address.present?
       when 'orange'
         '#FF9900'
       when 'red'
-        '#ff0000'  
+        '#ff0000'
+      else
+        '#ffffff'
       end
     via = "\n\n<color rgb='#{color_rgb}'>via #{shipping_method.name}</color>"
   end

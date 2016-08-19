@@ -48,6 +48,12 @@ repeat :all do
           move_down 2
           text "Stylist: #{@order.stylist.name}", align: :right
         end
+        
+        if @order.stylist.present? && (priority = @shipment.priority).present?  
+          if %w(high medium).include? priority.to_s
+            text "*#{priority.letter}", align: :center, :size => 24
+          end
+        end
 
         barcode = Barby::Code39.new @shipment.number
         barcode.annotate_pdf(self, x: 358, y: 507)
