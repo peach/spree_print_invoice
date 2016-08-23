@@ -51,7 +51,7 @@ repeat :all do
         
         fill_color "F48577"
         if @order.stylist.present? && (priority = @shipment.priority).present?  
-          if true or %w(high medium).include? priority.to_s
+          if %w(high medium).include? priority.to_s
             text "*#{priority.letter}", align: :center, :size => 26, :style => :bold
           end
         end
