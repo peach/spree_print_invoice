@@ -4,6 +4,7 @@ bill_address = @order.bill_address
 ship_address = @order.ship_address
 shipment = (@shipment || @order.shipments.first)
 shipping_method = shipment.try(:shipping_method)
+shipping_speed = shipment.try(:shipping_speed)
 anonymous = @order.email =~ /@example.net$/
 
 
@@ -30,20 +31,13 @@ if ship_address.present?
   header_row.push(Spree.t(:shipping_address))
   via = ''
   if shipping_method.present?
-    color_rgb = 
-      case shipment.shipping_speed.try(:color)
-      when 'green'
-        '#32CD32'
-      when 'amber'
-        '#FFEFD5'
-      when 'orange'
-        '#FF9900'
-      when 'red'
-        '#ff0000'
-      else
-        '#ffffff'
-      end
-    via = "\n\n<color rgb='#{color_rgb}'>via #{shipping_method.name}</color>"
+    via = "\n\nvia #{shipping_method.name}"
+    if shipping_speed.present?
+      color_rgb = shipping_speed.try(:rgb)
+      via += "<color rgb='#{color_rgb}'>" if color_rgb.present?
+      via += " #{shipping_speed.to_s.titleize}"
+      via += '</color>' if color_rgb.present?
+    end
   end
   address_row.push(address_info(ship_address) + via)
 end
@@ -60,7 +54,7 @@ data = [
 font @font_face, :size => 9
 
 if header_row.present?
- table(data, :width => 540,:cell_style => { :inline_format => true }) do
+ table(data, :width => 540, :cell_style => { :inline_format => true }) do
   row(0).font_style = :bold
 
   # Billing address header

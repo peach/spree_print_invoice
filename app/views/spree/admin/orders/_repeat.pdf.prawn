@@ -49,11 +49,13 @@ repeat :all do
           text "Stylist: #{@order.stylist.name}", align: :right
         end
         
+        fill_color "F48577"
         if @order.stylist.present? && (priority = @shipment.priority).present?  
-          if %w(high medium).include? priority.to_s
-            text "*#{priority.letter}", align: :center, :size => 24
+          if true or %w(high medium).include? priority.to_s
+            text "*#{priority.letter}", align: :center, :size => 26, :style => :bold
           end
         end
+        fill_color "000000"
 
         barcode = Barby::Code39.new @shipment.number
         barcode.annotate_pdf(self, x: 358, y: 507)
@@ -61,12 +63,12 @@ repeat :all do
     end
     
     if @order.user.present?
-      move_down 60
+      move_down 50
       font @font_face, :size => 11, :style => :bold
       text "Packing Slip for #{@order.user.name}", :align => :left
       move_down 5
     else
-      move_down 75
+      move_down 65
     end
   
   end
