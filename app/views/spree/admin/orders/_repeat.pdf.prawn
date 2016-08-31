@@ -49,13 +49,9 @@ repeat :all do
           text "Stylist: #{@order.stylist.name}", align: :right
         end
         
-        fill_color "F48577"
-        if @order.stylist.present? && (priority = @shipment.priority).present?  
-          if %w(high medium).include? priority.to_s
-            text "*#{priority.letter}", align: :center, :size => 26, :style => :bold
-          end
+        if (priority = @shipment.priority).present? && priority > ShipmentPriority::Low
+          text "*#{priority.letter}", align: :center, :size => 26, :style => :bold, color: "F48577"
         end
-        fill_color "000000"
 
         barcode = Barby::Code39.new @shipment.number
         barcode.annotate_pdf(self, x: 358, y: 507)
