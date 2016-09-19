@@ -3,17 +3,17 @@ require 'barby'
 require 'barby/barcode/code_39'
 require 'barby/outputter/prawn_outputter'
 
-render partial: 'repeat'
+render partial: 'spree/admin/orders/repeat'
 
 bounding_box([0, 540], width: 540, height: 460) do
-  render :partial => "address"
-  render :partial => "line_items_box"
+  render :partial => "spree/admin/orders/address"
+  render :partial => "spree/admin/orders/line_items_box"
 end
 
 move_down 8
 
 # Footer
-render :partial => "footer"
+render :partial => "spree/admin/orders/footer"
 
 move_down 650
 
