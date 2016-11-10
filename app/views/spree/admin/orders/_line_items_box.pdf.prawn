@@ -27,7 +27,7 @@ else
 end
 
 @shipment.manifest.each do |m|
-  next if @hide_prices and m.line_item.tbd?
+  next if @hide_prices and m.line_item.virtual?
   row = [m.variant.sku, m.variant.product.name]
   row << m.variant.options_text
   row << m.line_item.single_display_amount.to_s unless @hide_prices
