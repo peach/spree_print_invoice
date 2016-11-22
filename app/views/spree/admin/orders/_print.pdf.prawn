@@ -17,7 +17,7 @@ render :partial => "spree/admin/orders/footer"
 
 move_down 650
 
-text "If you wish to return one of your peach products, visit www.#{peach_domain} and sign in to your account to view your Order History. Select the order you'd like to return and follow the instructions to receive your pre-paid UPS shipping label#{(ENV['RETURN_LABEL_INCLUDED'] || false).to_bool ? ", or use the included return label" : nil}. Pop the items you're returning into their original box with the packing slip and drop them off at the nearest UPS Drop Box. Once we receive and process the return, we will refund you accordingly. Please allow two weeks for return processing.", :style => :italic 
+text "If you wish to return one of your peach products, visit www.#{peach_domain} and sign in to your account to view your Order History. Select the order you'd like to return and follow the instructions to receive your pre-paid UPS shipping label#{(ENV['RETURN_LABEL_INCLUDED'] || false).to_bool ? ", or use the included return label" : nil}. Pop the items you're returning into their original box with the packing slip and drop them off at the nearest UPS Drop Box. Once we receive and process the return, we will refund you accordingly. Please allow up to two weeks for return processing.", :style => :italic 
 
 move_down 4
 
