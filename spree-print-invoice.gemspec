@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency('prawn', '1.0.0')
 
-  s.add_dependency "solidus", '~> 1.1.0'
+  s.add_dependency "solidus", [">= 1.1", "<= 1.4"]
 
   s.add_development_dependency 'rspec-rails', '~> 2.14.0'
 end
