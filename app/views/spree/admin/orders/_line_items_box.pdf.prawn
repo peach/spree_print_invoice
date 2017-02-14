@@ -26,7 +26,7 @@ else
   data << [Spree.t(:sku), 'Item', "Size and Color", Spree.t(:price), 'Quantity', Spree.t(:total)]
 end
 
-@shipment.manifest.each do |m|
+@shipment.manifest(skip_states: true).each do |m|
   next if @hide_prices and m.line_item.virtual?
   row = [m.variant.sku, m.variant.product.name]
   row << m.variant.options_text
@@ -60,7 +60,7 @@ if @hide_prices and @order.shipments.count > 1
       end
     end
 
-  end  
+  end
 end
 
 unless @hide_prices
