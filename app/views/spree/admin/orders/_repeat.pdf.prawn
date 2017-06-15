@@ -1,6 +1,6 @@
 repeat :all do
   bounding_box([0, 720], width: 540, height: 650) do
-  
+
     @font_face = Spree::PrintInvoice::Config[:print_invoice_font_face]
 
     font @font_face
@@ -48,25 +48,22 @@ repeat :all do
           move_down 2
           text "Stylist: #{@order.stylist.name}", align: :right
         end
-        
+
         if (priority = @shipment.priority).present? && priority > ShipmentPriority::Low
           text "*#{priority.letter}", align: :center, :size => 26, :style => :bold, color: "F48577"
         end
 
         barcode = Barby::Code39.new @shipment.number
         barcode.annotate_pdf(self, x: 358, y: 507)
+        font @font_face, :size => 11, :style => :bold
+        text_box "Item Count: #{@order.line_items.count}", :align => :right, at: [365, 488]
       end
     end
-    
-    if @order.user.present?
-      move_down 50
-      font @font_face, :size => 11, :style => :bold
-      text "Packing Slip for #{@order.user.name}", :align => :left
-      move_down 5
-    else
-      move_down 65
-    end
-  
+    move_down 45
+    order_for = @order.user.present? ? @order.user.name : @order.email
+    font @font_face, :size => 11, :style => :bold
+    text "Packing Slip for #{order_for}", :align => :left
+    move_down 5
   end
-  
+
 end
