@@ -34,22 +34,39 @@ end
   data << row
 end
 
-@order.shipments.each do |shipment|
-  if (shipment.number != @shipment.number)
-    shipment.manifest.each do |m|
-      next if m.line_item.sample_bra? && !shipment.shipped?
-      next if m.line_item.subscription?
-      row = [m.variant.sku, m.variant.product.name]
-      row << m.variant.options_text
-      row << m.quantity
-      data << row
+if @order.shipments.count > 1
+  need_title = true
+  @order.shipments.each do |shipment|
+    if (shipment.number != @shipment.number)
+      shipment.manifest.each do |m|
+        next if m.line_item.sample_bra? && !shipment.shipped?
+        next if m.line_item.subscription?
+        if need_title
+          need_title = false
+          style_row(row_styles, data.size, font_style: :bold)
+          data << ["Other Items ordered (not included in this shipment)", nil, nil]
+        end
+        row = []
+        style_row(row_styles, data.size)
+
+        product = "<color rgb='#000000'>"
+        product += "<b>#{m.variant.product.name.upcase}</b>\n"
+        product += "todo: descrition for #{m.variant.product.name}"
+        product += "</color>"
+
+        row << product
+        style_row(row_styles, data.size, text_color: "e73a22") if m.quantity > 1
+        row << "#{m.variant.option_values_to_s("\n", :presentation)} \n #{m.quantity}"
+        row << m.variant.sku
+        data << row
+      end
     end
   end
-
 end
 
+
 move_down 120
-table(data, :width => @column_widths.values.compact.sum, :column_widths => @column_widths, cell_style: {padding: [8, 5, 8, 5], inline_format: true}, row_colors: [nil,'eff0f1']) do
+table(data,:width => @column_widths.values.compact.sum, :column_widths => @column_widths, cell_style: {padding: [8, 5, 8, 5], inline_format: true}, row_colors: [nil,'eff0f1']) do
   cells.border_width = 0.5
   last_row = data.length - 1
   last_column = data[0].length - 1
