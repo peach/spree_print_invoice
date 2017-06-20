@@ -6,7 +6,7 @@ def style_row(styles, row_num, opts={})
   styles[row_num].merge!(opts)
 end
 
-@column_widths = { 0 => 397, 1 => 70, 2 => 70}
+@column_widths = { 0 => 377, 1 => 80, 2 => 80}
 @align = { 0 => :left, 1 => :left, 2 => :right }
 if @order.shipments.count > 1
   style_row(row_styles, data.size, font_style: :bold)
@@ -21,9 +21,15 @@ end
   next if m.line_item.virtual?
   row = []
   style_row(row_styles, data.size)
-  row << "#{m.variant.product.name.upcase} \n todo: descrition for #{m.variant.product.name}"
+
+  product = "<color rgb='#000000'>"
+  product += "<b>#{m.variant.product.name.upcase}</b>\n"
+  product += "todo: descrition for #{m.variant.product.name}"
+  product += "</color>"
+
+  row << product
   style_row(row_styles, data.size, text_color: "e73a22") if m.quantity > 1
-  row << "#{m.variant.option_values_to_s("\n", :presentation)} \n x#{m.quantity}"
+  row << "#{m.variant.option_values_to_s("\n", :presentation)} \n #{m.quantity}"
   row << m.variant.sku
   data << row
 end
@@ -43,14 +49,14 @@ end
 end
 
 move_down 120
-table(data, :width => @column_widths.values.compact.sum, :column_widths => @column_widths, cell_style: {padding: [8, 5, 8, 5]}, row_colors: [nil,'eff0f1']) do
+table(data, :width => @column_widths.values.compact.sum, :column_widths => @column_widths, cell_style: {padding: [8, 5, 8, 5], inline_format: true}, row_colors: [nil,'eff0f1']) do
   cells.border_width = 0.5
   last_row = data.length - 1
   last_column = data[0].length - 1
   row_styles.each do |row_num, styles|
     row(row_num).font_style = styles[:font_style] if styles[:font_style].present?
     row(row_num).text_color = styles[:text_color] if styles[:text_color].present?
-    row(row_num).columns(0..last_column).borders = [:bottom]
+    row(row_num).columns(0..last_column).borders = [:top, :bottom]
   end
 
   row(0).borders = [:bottom]

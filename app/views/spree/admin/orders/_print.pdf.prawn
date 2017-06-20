@@ -5,7 +5,7 @@ require 'barby/outputter/prawn_outputter'
 
 render partial: 'spree/admin/orders/repeat'
 
-bounding_box([0, 740], width: 540, height: 560) do
+bounding_box([0, 630], width: 540, height: 470) do
   render :partial => "spree/admin/orders/line_items_box"
 end
 
