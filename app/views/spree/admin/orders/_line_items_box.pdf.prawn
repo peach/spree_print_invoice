@@ -24,7 +24,7 @@ end
 
   product = "<color rgb='#000000'>"
   product += "<b>#{m.variant.product.name.upcase}</b>\n"
-  product += "todo: descrition for #{m.variant.product.name}"
+  product += m.variant.product.short_description if m.variant.product.short_description.present?
   product += "</color>"
 
   row << product
