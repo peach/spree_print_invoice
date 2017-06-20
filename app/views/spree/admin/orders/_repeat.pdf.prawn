@@ -1,72 +1,67 @@
+@font_face = Spree::PrintInvoice::Config[:print_invoice_font_face]
 repeat :all do
-  bounding_box([0, 720], width: 540, height: 650) do
-  
-    @font_face = Spree::PrintInvoice::Config[:print_invoice_font_face]
+  pigs = Rails.root.join('app','assets','images','peach-logo-horiz.png').to_s
+  image pigs, :at => [0, 720],  :scale => 0.75
 
+  if (priority = @shipment.priority).present? && priority > ShipmentPriority::Low
+    text_box "*#{priority.letter}", at: [165, 690], width: 45, align: :left, size: 36, style: :bold, color: "F48577"
+  end
+
+  bounding_box([215, 690], width: 200, height: 100) do
+    font @font_face
+    if @order.user.present?
+      text "Package for:"
+      text @order.user.name, size: 18
+    end
+  end
+
+  bounding_box([400, 720], width: 540, height: 100) do
+   render :partial => "spree/admin/orders/head_info"
+  end
+
+  bounding_box([0, 110], width: 305, height: 650) do
     font @font_face
 
-    # im = Rails.application.assets.find_asset(Spree::PrintInvoice::Config[:print_invoice_logo_path])
-    # image im , :at => [0,720], :scale => logo_scale
+    text "THANK YOU", size: 20
 
-    #fill_color "E99323"
-    if @hide_prices
-      text Spree.t(:packaging_slip), :align => :right, :style => :bold, :size => 18
-    else
-      text Spree.t(:customer_invoice), :align => :right, :style => :bold, :size => 18
-    end
+    text("Please see the reverse side for FAQs and return information, and don’t hesitate to contact your stylist <b>#{@order.stylist.name}</b> at <b>#{@order.stylist.email}</b> with any questions at  <b>#{returns_email}</b>", style: :italic, inline_format: true )
+
     fill_color "000000"
 
-    move_down 2
-
-    if Spree::PrintInvoice::Config.use_sequential_number? && @order.invoice_number.present? && !@hide_prices
-
-      font @font_face, :size => 9, :style => :bold
-      text "#{Spree.t(:invoice_number)} #{@order.invoice_number}", :align => :right
-
-      move_down 2
-      font @font_face, :size => 9
-      text "#{Spree.t(:invoice_date)} #{I18n.l Date.today.strftime("%m/%d/%Y")}", :align => :right
-
-    else
-
-      move_down 2
-      font @font_face, :size => 9, :style => :bold
-      text "#{Spree.t(:order_number, :number => @order.number)}", :align => :right
-
-      move_down 2
-      font @font_face, :size => 9
-      text "Placed: #{@order.completed_at.to_date}", :align => :right
-      move_down 2
-      text "Shipped: #{I18n.l Date.today}", :align => :right
-
-      if @shipment.present?
-        move_down 2
-        font @font_face, :size => 9
-        text "#{Spree.t(:shipment)}: #{@shipment.number}", align: :right
-
-        if @order.stylist.present? && !@order.stylist.corporate?
-          move_down 2
-          text "Stylist: #{@order.stylist.name}", align: :right
-        end
-        
-        if (priority = @shipment.priority).present? && priority > ShipmentPriority::Low
-          text "*#{priority.letter}", align: :center, :size => 26, :style => :bold, color: "F48577"
-        end
-
-        barcode = Barby::Code39.new @shipment.number
-        barcode.annotate_pdf(self, x: 358, y: 507)
+    move_down 4
+    if @shipment.present?
+      if (priority = @shipment.priority).present? && priority > ShipmentPriority::Low
+        text "*#{priority.letter}", align: :center, :size => 26, :style => :bold, color: "F48577"
       end
+      barcode = Barby::Code39.new @shipment.number
+      barcode.annotate_pdf(self, x: 0, y: 535)
     end
-    
-    if @order.user.present?
-      move_down 50
-      font @font_face, :size => 11, :style => :bold
-      text "Packing Slip for #{@order.user.name}", :align => :left
-      move_down 5
-    else
-      move_down 65
-    end
-  
   end
-  
+
+  bounding_box([220, 50], width: 100, height: 650) do
+   font @font_face, :size => 11
+   text "Ship To:", style: :bold
+
+   font @font_face, :size => 9
+   address = @order.ship_address
+
+   info = %Q{ #{address.first_name} #{address.last_name}
+              #{address.address1}
+   }
+   info += "#{address.address2}\n" if address.address2.present?
+   state = address.state ? address.state.abbr : ""
+   info += "#{address.city} #{state}. #{address.zipcode}\n"
+   info += "#{address.country.name}\n"
+   info.strip
+   text info
+  end
+
+  bounding_box([360, 100], width: 340, height: 650) do
+   font @font_face, :size => 13
+   text "Follow us online:", style: :bold
+   font @font_face, :size => 11
+   text "@withlovepeach"
+  end
+
+
 end
