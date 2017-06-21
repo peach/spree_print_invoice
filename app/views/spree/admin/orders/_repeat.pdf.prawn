@@ -1,72 +1,78 @@
+@font_face = Spree::PrintInvoice::Config[:print_invoice_font_face]
 repeat :all do
-  bounding_box([0, 720], width: 540, height: 650) do
-  
-    @font_face = Spree::PrintInvoice::Config[:print_invoice_font_face]
 
-    font @font_face
-
-    # im = Rails.application.assets.find_asset(Spree::PrintInvoice::Config[:print_invoice_logo_path])
-    # image im , :at => [0,720], :scale => logo_scale
-
-    #fill_color "E99323"
-    if @hide_prices
-      text Spree.t(:packaging_slip), :align => :right, :style => :bold, :size => 18
-    else
-      text Spree.t(:customer_invoice), :align => :right, :style => :bold, :size => 18
+  bounding_box([0, 740], width: 540, height: 85) do
+    bounding_box([380, 85], width: 160) do
+     render :partial => "spree/admin/orders/head_info"
     end
-    fill_color "000000"
 
-    move_down 2
-
-    if Spree::PrintInvoice::Config.use_sequential_number? && @order.invoice_number.present? && !@hide_prices
-
-      font @font_face, :size => 9, :style => :bold
-      text "#{Spree.t(:invoice_number)} #{@order.invoice_number}", :align => :right
-
-      move_down 2
-      font @font_face, :size => 9
-      text "#{Spree.t(:invoice_date)} #{I18n.l Date.today.strftime("%m/%d/%Y")}", :align => :right
-
-    else
-
-      move_down 2
-      font @font_face, :size => 9, :style => :bold
-      text "#{Spree.t(:order_number, :number => @order.number)}", :align => :right
-
-      move_down 2
-      font @font_face, :size => 9
-      text "Placed: #{@order.completed_at.to_date}", :align => :right
-      move_down 2
-      text "Shipped: #{I18n.l Date.today}", :align => :right
-
-      if @shipment.present?
-        move_down 2
-        font @font_face, :size => 9
-        text "#{Spree.t(:shipment)}: #{@shipment.number}", align: :right
-
-        if @order.stylist.present? && !@order.stylist.corporate?
-          move_down 2
-          text "Stylist: #{@order.stylist.name}", align: :right
-        end
-        
-        if (priority = @shipment.priority).present? && priority > ShipmentPriority::Low
-          text "*#{priority.letter}", align: :center, :size => 26, :style => :bold, color: "F48577"
-        end
-
-        barcode = Barby::Code39.new @shipment.number
-        barcode.annotate_pdf(self, x: 358, y: 507)
+    if (priority = @shipment.priority).present? && priority > ShipmentPriority::Low
+      bounding_box([170, 75], width: 200) do
+        text "*#{priority.letter}", align: :center, size: 36, style: :bold, color: "F48577"
       end
     end
-    
-    if @order.user.present?
-      move_down 50
-      font @font_face, :size => 11, :style => :bold
-      text "Packing Slip for #{@order.user.name}", :align => :left
-      move_down 5
-    else
-      move_down 65
+
+    bounding_box([0, 20], width: 540, height: 20) do
+      font @font_face
+      float do
+        text "Item count: #{@shipment.inventory_units.count}", size: 14, align: :right
+      end
+      text @order.name, size: 16
     end
-  
   end
-  
+
+  bounding_box([0, 110], width: 540, height: 100) do
+    font @font_face
+
+    bounding_box([0, 100], width: 360) do
+      text "THANK YOU", size: 16, style: :bold
+
+      text("Please see the reverse side for FAQs and return information, and don’t hesitate to contact #{@order.active_stylist.present? ? "your stylist <b>#{@order.active_stylist.name}</b> at <b>#{@order.active_stylist.email}</b>" : "peach support at <b>#{client_support_email}</b>"} with any questions.", inline_format: true )
+    end
+
+    bounding_box([380, 100], width: 160) do
+     font @font_face
+     text "Follow us online:", style: :bold, size: 13
+     text "@withlovepeach", size: 11
+
+      pigs = Rails.root.join('app','assets','images','pinterest_black.png').to_s
+      image pigs, :at => [0, 0],  :scale => 0.30
+
+      pigs = Rails.root.join('app','assets','images','facebook_black.png').to_s
+      image pigs, :at => [25, 0],  :scale => 0.30
+
+      pigs = Rails.root.join('app','assets','images','instagram_black.png').to_s
+      image pigs, :at => [50, 0],  :scale => 0.30
+    end
+
+    barcode = Barby::Code39.new @shipment.number
+    barcode.annotate_pdf(self, x: 0, y: -10)
+
+    bounding_box([220, 40], width: 150) do
+      font @font_face, size: 8
+      text "Ship To:", style: :bold, size: 9
+
+      address = @order.ship_address
+      shipping_method = @shipment.shipping_method
+      shipping_speed = @shipment.shipping_speed
+
+      text address.address_label
+      via = ''
+      via += "via #{shipping_method.name}" if shipping_method.present?
+      opts = {}
+      if shipping_speed.present?
+        if (color_rgb = shipping_speed.try(:rgb)).present?
+          opts.merge!(color: color_rgb.split('#')[1])
+        end
+        via += ' ' if via.present?
+        via += shipping_speed.to_s.titleize
+      end
+
+      if via.present?
+        text via, opts
+      end
+    end
+
+  end
+
 end
