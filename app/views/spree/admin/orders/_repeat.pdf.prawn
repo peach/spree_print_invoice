@@ -1,7 +1,7 @@
 @font_face = Spree::PrintInvoice::Config[:print_invoice_font_face]
 repeat :all do
 
-  bounding_box([0, 740], width: 540, height: 85) do
+  bounding_box([0, 725], width: 540, height: 85) do
     bounding_box([380, 85], width: 160) do
      render :partial => "spree/admin/orders/head_info"
     end
