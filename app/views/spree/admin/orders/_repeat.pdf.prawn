@@ -48,7 +48,7 @@ repeat :all do
     barcode = Barby::Code39.new @shipment.number
     barcode.annotate_pdf(self, x: 0, y: -10)
 
-    bounding_box([220, 40], width: 150) do
+    bounding_box([220, 47], width: 150) do
       font @font_face, size: 8
       text "Ship To:", style: :bold, size: 9
 
