@@ -16,7 +16,7 @@ shipment.manifest.each do |m|
   style_row(row_styles, data.size)
 
   product = "<color rgb='#000000'>"
-  product += "<b>#{m.variant.product.name.upcase}#{"  |  #{shipment.order.display_money(m.line_item.price, no_cents_if_zero: true)}" if shipment.order.bento? || true}</b>\n"
+  product += "<b>#{m.variant.product.name.upcase}#{"  |  #{shipment.order.display_money(m.line_item.price, no_cents_if_zero: true)}" if shipment.order.bento?}</b>\n"
   product += m.variant.product.short_description if m.variant.product.short_description.present?
   product += "</color>"
 
