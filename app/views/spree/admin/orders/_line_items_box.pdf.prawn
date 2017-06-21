@@ -8,6 +8,10 @@ def style_row(styles, row_num, opts={})
   styles[row_num].merge!(opts)
 end
 
+def display_options_quantity(options, quantity)
+  [options, "qty: #{quantity}"].flatten.map(&:presence).compact.join("\n")
+end
+
 @column_widths = { 0 => 360, 1 => 80, 2 => 100}
 @align = { 0 => :left, 1 => :left, 2 => :right }
 if @order.shipments.count > 1
@@ -17,7 +21,7 @@ end
 
 @shipment.cards_for_packing_slip.each do |card|
   style_row(row_styles, data.size)
-  data << ['<b>'+card.name+'</b>', [card.options_text, "qty: #{card.quantity}"].map(&:presence).compact.join("\n"), card.sku]
+  data << ['<b>'+card.name+'</b>', display_options_quantity(card.options_text, card.quantity), card.sku]
 end
 
 render partial: 'spree/admin/orders/shipment_line_items', locals: {shipment: @shipment, included: true, need_title: false, data: data, row_styles: row_styles}

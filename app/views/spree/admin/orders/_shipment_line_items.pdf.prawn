@@ -16,13 +16,13 @@ shipment.manifest.each do |m|
   style_row(row_styles, data.size)
 
   product = "<color rgb='#000000'>"
-  product += "<b>#{m.variant.product.name.upcase}</b>\n"
+  product += "<b>#{m.variant.product.name.upcase}#{"  |  #{shipment.order.display_money(m.line_item.price, no_cents_if_zero: true)}" if shipment.order.bento? || true}</b>\n"
   product += m.variant.product.short_description if m.variant.product.short_description.present?
   product += "</color>"
 
   row << product
   style_row(row_styles, data.size, text_color: "e73a22") if m.quantity > 1
-  row << "#{m.variant.option_values_to_s("\n", :presentation)}\nqty: #{m.quantity}"
+  row << display_options_quantity(m.variant.option_values_to_s("\n", :presentation), m.quantity)
   row << m.variant.sku
   data << row
 end
