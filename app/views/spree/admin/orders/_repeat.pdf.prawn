@@ -15,7 +15,7 @@ repeat :all do
     bounding_box([0, 20], width: 540, height: 20) do
       font @font_face
       float do
-        text "Item count: #{@shipment.inventory_units.count}", size: 14, align: :right
+        text "Item count: #{@shipment.inventory_units.reject(&:virtual?).size + @shipment.cards_for_packing_slip.sum(&:quantity)}", size: 14, align: :right
       end
       text @order.name, size: 16
     end
