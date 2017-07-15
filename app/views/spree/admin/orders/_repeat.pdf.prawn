@@ -24,6 +24,15 @@ repeat :all do
   bounding_box([0, 110], width: 540, height: 100) do
     font @font_face
 
+    if @order.style_box_incentive?
+      bounding_box([100, 160], width: 540) do
+        text "The more you spend, the more you save!", size: 15, style: :bold
+      end
+      bounding_box([20, 135], width: 540) do
+        text "<i>Spend</i> <b>$100+</b> <i>and get</i> <b>10% off</b> | <i>spend</i> <b>$150+</b> <i>and get</i> <b>15% off</b> | <i>spend</i> <b>$200+</b> <i>and get</i> <b>20% off</b>", size: 12, inline_format: true
+      end
+    end
+
     bounding_box([0, 100], width: 360) do
       text "THANK YOU", size: 16, style: :bold
 
