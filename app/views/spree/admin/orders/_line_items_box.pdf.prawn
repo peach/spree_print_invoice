@@ -14,10 +14,6 @@ end
 
 @column_widths = { 0 => 360, 1 => 80, 2 => 100}
 @align = { 0 => :left, 1 => :left, 2 => :right }
-if @order.shipments.count > 1
-  style_row(row_styles, data.size)
-  data << ["--> Included in this shipment", nil, nil]
-end
 
 @shipment.cards_for_packing_slip.each do |card|
   style_row(row_styles, data.size)
@@ -26,13 +22,8 @@ end
 
 render partial: 'spree/admin/orders/shipment_line_items', locals: {shipment: @shipment, included: true, need_title: false, data: data, row_styles: row_styles}
 
-if @order.shipments.count > 1
-  need_title = true
-  @order.shipments.each do |shipment|
-    if (shipment.number != @shipment.number)
-      render partial: 'spree/admin/orders/shipment_line_items', locals: {shipment: shipment, included: false, need_title: need_title, data: data, row_styles: row_styles}
-    end
-  end
+if @order.shipments.any? {|s| !s.shipped? && !s.canceled? }
+  data << ["--> Please note that you have other items that are due to be shipped-- stay tuned for an additional package!", nil, nil]
 end
 
 table(data, :width => @column_widths.values.compact.sum, :column_widths => @column_widths, cell_style: {padding: [8, 5, 8, 5], inline_format: true}, row_colors: [nil,'eff0f1']) do
