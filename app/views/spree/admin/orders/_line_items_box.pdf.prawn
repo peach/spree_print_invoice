@@ -22,7 +22,7 @@ end
 
 render partial: 'spree/admin/orders/shipment_line_items', locals: {shipment: @shipment, included: true, need_title: false, data: data, row_styles: row_styles}
 
-if @order.shipments.any? {|s| !s.shipped? && !s.canceled? }
+if @order.shipments.any? {|s| s != @shipment && !s.shipped? && !s.canceled? }
   data << ["--> Please note that you have other items that are due to be shipped-- stay tuned for an additional package!", nil, nil]
 end
 
