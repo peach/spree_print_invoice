@@ -10,6 +10,6 @@ if @shipment.present?
  text "#{Spree.t(:shipment)}: #{@shipment.number}", align: :left
 end
 
-if @order.active_stylist.present? && !@order.active_stylist.corporate?
-  text "Stylist: #{@order.active_stylist.name}", align: :left
+if (stylist = @order.support_stylist).present?
+  text "Stylist: #{stylist.name}", align: :left
 end
