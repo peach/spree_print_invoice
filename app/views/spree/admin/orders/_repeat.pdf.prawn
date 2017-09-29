@@ -27,7 +27,8 @@ repeat :all do
     bounding_box([0, 100], width: 360) do
       text "THANK YOU", size: 16, style: :bold
 
-      text("Please see the reverse side for FAQs and return information, and don’t hesitate to contact #{@order.active_stylist.present? ? "your stylist <b>#{@order.active_stylist.name}</b> at <b>#{@order.active_stylist.email}</b>" : "peach support at <b>#{client_support_email}</b>"} with any questions.", inline_format: true )
+      stylist = @order.support_stylist
+      text("Please see the reverse side for FAQs and return information, and don’t hesitate to contact #{stylist.present? ? "your stylist <b>#{stylist.name}</b> at <b>#{stylist.email}</b>" : "peach support at <b>#{client_support_email}</b>"} with any questions.", inline_format: true )
     end
 
     bounding_box([380, 100], width: 160) do
