@@ -24,5 +24,6 @@ shipment.manifest.each do |m|
   style_row(row_styles, data.size, text_color: "e73a22") if m.quantity > 1
   row << display_options_quantity(m.variant.option_values_to_s("\n", :presentation), m.quantity)
   row << m.variant.sku
+  row << m.line_item.stock_items.map {|si| si.stock_item_location.try(:name) }.compact.uniq.first
   data << row
 end

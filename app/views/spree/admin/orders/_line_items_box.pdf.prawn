@@ -12,8 +12,8 @@ def display_options_quantity(options, quantity)
   [options, "qty: #{quantity}"].flatten.map(&:presence).compact.join("\n")
 end
 
-@column_widths = { 0 => 360, 1 => 80, 2 => 100}
-@align = { 0 => :left, 1 => :left, 2 => :right }
+@column_widths = { 0 => 340, 1 => 70, 2 => 80, 3 => 50}
+@align = { 0 => :left, 1 => :left, 2 => :right, 3 => :right }
 
 @shipment.cards_for_packing_slip.each do |card|
   style_row(row_styles, data.size)
