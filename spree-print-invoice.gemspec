@@ -17,9 +17,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency('barby', '~> 0.5.0')
 
-  s.add_dependency('prawn', '~> 2.1.0')
+  s.add_dependency('prawn', '>= 2.2')
 
-  s.add_dependency "solidus", [">= 2.1"]
+  s.add_dependency "solidus", [">= 2.4"]
 
   s.add_development_dependency 'rspec-rails', '~> 2.14.0'
 end
